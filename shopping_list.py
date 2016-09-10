@@ -1,6 +1,71 @@
 """ Scott Pete Perry, 09/09/2016
     This is a shopping list program that allows the user to read and write to a .csv file in python.
     https://github.com/Perry-S-P/shopping_list
+
+
+main function
+
+    display menu
+    get user input
+    if user input = r, c, m, a, q
+        if r
+            call function r
+        elif c
+            call function c
+        elif m
+            call function m
+        elif a
+            call function a
+        elif q
+        end loop
+    else
+        "input incorrect!"
+        loop, display menu
+    display "program exiting"
+
+
+function menu
+    display options
+    list required items
+    list completed items
+    mark item completed
+    add item
+    quit
+
+
+function list required items
+    open items.csv
+    read lines in items.csv
+    if row[3] = r
+        display 'item name', 'item cost', 'item priority'
+
+
+function list completed items
+    open items.csv
+    read lines in items.csv
+    if row[4] = c
+        display 'item name', 'item cost', 'item priority'
+
+
+function mark item complete
+    open item.csv
+    read lines in items.csv
+    get input from user (1, 2, 3)
+    count lines in .csv
+    if counted lines = user input
+        copy to list
+        append list, overwrite r to x
+    write items.csv
+    write list[]
+
+
+function add item
+    display what is the item name?
+    get input
+    display what is the item cost?
+    get input
+    display what is item priority?
+    get input
 """
 import csv
 
@@ -52,14 +117,14 @@ def list_items_completed():
                 print("There are no completed items.")
 
 
+# mark item and remove 'r' from csv
 def mark_item_completed():
     line_count = 0
     marked_item = int(input("Enter the item number:"))
     with open("items.csv", 'r') as f:
         reader = csv.reader(f, delimiter=',')
-        title = next(reader)  # title
+        title = next(reader)
         idx = title.index("item_required")
-
         lines = []
         for line in reader:
             if line[idx] == 'r':
@@ -67,7 +132,6 @@ def mark_item_completed():
                 if marked_item == line_count:
                     line[idx] = 'x'
             lines.append(line)
-
     with open("items.csv", 'w', newline='') as f:
         writer = csv.writer(f, delimiter=',')
         writer.writerow(title)
