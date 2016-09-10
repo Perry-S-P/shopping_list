@@ -34,14 +34,20 @@ def mark_item_completed():
     line_count = 0
     marked_item = int(input())
     with open("items.csv", 'r') as f:
-        reader = csv.reader(f, delimiter=',')
+        reader = csv.DictReader(f, delimiter=',')
         for line in reader:
             if line["item_required"] == 'r':
                 line_count += 1
                 if marked_item == line_count:
-                    print("marker")
-
-
+                    new_list = line
+                    print(new_list)
+                    for key, value in new_list.items():
+                        if value == "r":
+                            new_list['item_required'] = "x"
+                            print(new_list)
+    with open("items.csv", 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow(new_list.values())
 
 def add_item():
     print("Item name:")
