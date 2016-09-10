@@ -14,7 +14,7 @@ def list_items_required():
                 line_count += 1
                 print("{}.{}   ${}".format(line_count, line["item_name"], line["item_cost"]))
             else:
-                print("There are no completed items.")
+                print("There are no required items.")
 
 
 def list_items_completed():
@@ -29,6 +29,34 @@ def list_items_completed():
                 print("There are no completed items.")
 
 
+def mark_item_completed():
+    print("Enter the item number:")
+    line_count = 0
+    marked_item = int(input())
+    with open("items.csv", 'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        for line in reader:
+            if line["item_required"] == 'r':
+                line_count += 1
+                if marked_item == line_count:
+                    print("marker")
+
+
+
+def add_item():
+    print("Item name:")
+    item_name = str(input())
+    print("Cost:")
+    item_cost = float(input())
+    print("Priority: 1, 2, or 3:")
+    item_priority = int(input())
+    add_item_list = [item_name, item_cost, item_priority, 'r']
+    print(add_item_list)
+    with open("items.csv", 'a') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow(add_item_list)
+
+
 def main():
     loop = True
     while loop:
@@ -41,21 +69,21 @@ def main():
             print("Completed Items:")
             list_items_completed()
         elif menu_choice.lower() == 'm':
-            print("list of items. new line 1, new line 2")
+            list_items_required()
+            mark_item_completed()
         elif menu_choice.lower() == 'a':
-            print("Item name:")
+            add_item()
         elif menu_choice.lower() == 'q':
             loop = False
         else:
             input("Input Error! Enter any key to try again.")
-
     print("Program exiting")
 
 
 def print_menu():
     print("Menu:")
-    print("R - List required items")
-    print("C - List completed items")
+    print("R - List r items")
+    print("C - List c items")
     print("M - Mark an item as completed")
     print("A - Add new items")
     print("Q - Quit")
