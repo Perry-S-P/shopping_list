@@ -5,6 +5,29 @@
 import csv
 
 
+def main():
+    loop = True
+    while loop:
+        print_menu()
+        menu_choice = str(input())
+        if menu_choice.lower() == 'r':
+            print("Required Items:")
+            list_items_required()
+        elif menu_choice.lower() == 'c':
+            print("Completed Items:")
+            list_items_completed()
+        elif menu_choice.lower() == 'm':
+            list_items_required()
+            mark_item_completed()
+        elif menu_choice.lower() == 'a':
+            add_item()
+        elif menu_choice.lower() == 'q':
+            loop = False
+        else:
+            input("Input Error! Enter any key to try again.")
+    print("Program exiting")
+
+
 def list_items_required():
     with open("items.csv") as file_object:
         reader = csv.DictReader(file_object, delimiter=',')
@@ -30,25 +53,28 @@ def list_items_completed():
 
 
 def mark_item_completed():
-    print("Enter the item number:")
     line_count = 0
-    marked_item = int(input())
+    marked_item = int(input("Enter the item number:"))
     with open("items.csv", 'r') as f:
-        reader = csv.DictReader(f, delimiter=',')
+        reader = csv.reader(f, delimiter=',')
+        title = next(reader)  # title
+        idx = title.index("item_required")
+
+        lines = []
         for line in reader:
-            if line["item_required"] == 'r':
+            if line[idx] == 'r':
                 line_count += 1
                 if marked_item == line_count:
-                    new_list = line
-                    print(new_list)
-                    for key, value in new_list.items():
-                        if value == "r":
-                            new_list['item_required'] = "x"
-                            print(new_list)
-    with open("items.csv", 'a') as f:
-        writer = csv.writer(f)
-        writer.writerow(new_list.values())
+                    line[idx] = 'x'
+            lines.append(line)
 
+    with open("items.csv", 'w', newline='') as f:
+        writer = csv.writer(f, delimiter=',')
+        writer.writerow(title)
+        writer.writerows(lines)
+
+
+# user input to add new item to csv
 def add_item():
     print("Item name:")
     item_name = str(input())
@@ -63,33 +89,10 @@ def add_item():
         writer.writerow(add_item_list)
 
 
-def main():
-    loop = True
-    while loop:
-        print_menu()
-        menu_choice = str(input())
-        if menu_choice.lower() == 'r':
-            print("Required Items:")
-            list_items_required()
-        elif menu_choice.lower() == 'c':
-            print("Completed Items:")
-            list_items_completed()
-        elif menu_choice.lower() == 'm':
-            list_items_required()
-            mark_item_completed()
-        elif menu_choice.lower() == 'a':
-            add_item()
-        elif menu_choice.lower() == 'q':
-            loop = False
-        else:
-            input("Input Error! Enter any key to try again.")
-    print("Program exiting")
-
-
 def print_menu():
     print("Menu:")
-    print("R - List r items")
-    print("C - List c items")
+    print("R - List required items")
+    print("C - List completed items")
     print("M - Mark an item as completed")
     print("A - Add new items")
     print("Q - Quit")
